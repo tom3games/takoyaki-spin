@@ -19,7 +19,7 @@ const TXT = {
     resHead: '本日の売上', resBoats: '売った舟', resRound: 'まんまる率', resBurnt: '焦げ', resBecha: 'ベチャ', resLeft: '帰った客', resTitle: '称号',
     unitBoat: '舟', unitKo: 'こ', unitNin: '人',
     photoCap: '最後の一舟', photoNone: '1舟も売れず…',
-    again: 'もう一回焼く', save: '結果画像を保存', share: '結果画像を共有', saved: '画像を保存しました', tapSkip: 'タップでとばす',
+    again: 'もう一回焼く', save: '画像を保存', share: '画像を共有', post: 'Xでポスト', xText: 'たこ焼きくるくるで「{t}」でした。{n}舟売って、まんまる率{r}%。', xTag: '#たこ焼きくるくる', saved: '画像を保存しました', tapSkip: 'タップでとばす',
     cardFoot: 'tom3games.github.io/takoyaki-spin',
   },
   en: {
@@ -39,7 +39,7 @@ const TXT = {
     resHead: "Today's sales", resBoats: 'Boats sold', resRound: 'Round rate', resBurnt: 'Burnt', resBecha: 'Splats', resLeft: 'Walked out', resTitle: 'Title',
     unitBoat: '', unitKo: '', unitNin: '',
     photoCap: 'The last boat', photoNone: 'Not a single boat sold...',
-    again: 'Cook again', save: 'Save result image', share: 'Share result image', saved: 'Image saved', tapSkip: 'Tap to skip',
+    again: 'Cook again', save: 'Save image', share: 'Share image', post: 'Post on X', xText: 'I got "{t}" in TAKOYAKI SPIN. Sold {n} boats, {r}% perfectly round.', xTag: '#TakoyakiSpin', saved: 'Image saved', tapSkip: 'Tap to skip',
     cardFoot: 'tom3games.github.io/takoyaki-spin',
   },
 }

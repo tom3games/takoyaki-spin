@@ -64,6 +64,17 @@ const variance3d = p => p.evaluate(() => {
   let s = 0, s2 = 0, n = 0; for (let i = 0; i < d.length; i += 4 * 3) { const v = d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11; s += v; s2 += v * v; n++ }
   return Math.round(s2 / n - (s / n) ** 2)
 })
+// Xでポスト: 押すと新しいタブで x.com/intent/post が開く（x.com は偽の応答で受ける）
+async function xPost(pg) {
+  await pg.context().route('https://x.com/**', r => r.fulfill({ status: 200, contentType: 'text/html', body: '<title>x</title>ok' }))
+  const b = await pg.evaluate(() => { const el = document.querySelector('#bX'), r = el.getBoundingClientRect(); return { vis: !!el.offsetParent && getComputedStyle(el.closest('.rBtns') || el).visibility !== 'hidden' && r.width > 60 && r.height >= 38, clip: el.scrollWidth > el.clientWidth + 1, label: el.innerText.trim() } })
+  const [pop] = await Promise.all([pg.waitForEvent('popup', { timeout: 6000 }), pg.click('#bX')])
+  await pop.waitForLoadState().catch(() => {}); const url = pop.url(); await pop.close()
+  const u = new URL(url), api = await pg.evaluate(() => ({ text: tk.xText(), url: tk.GAME_URL }))
+  return { b, url, text: u.searchParams.get('text'), link: u.searchParams.get('url'), api }
+}
+// ボタンの文字が切れていない
+const clipped = q => q.evaluate(() => [...document.querySelectorAll('main:not([hidden]) button')].filter(b => b.offsetParent && b.scrollWidth > b.clientWidth + 1).map(b => b.id))
 const SIZES = [[360, 640, 'small'], [390, 844, 'phone'], [844, 390, 'land'], [667, 375, 'land-se'], [768, 1024, 'tab'], [1440, 900, 'pc']]
 const toCook = p => p.evaluate(() => { tk.dbg.pause(true); let k = 0; while (tk.S.ph !== 'cook' && k++ < 300) tk.dbg.step(1); tk.dbg.render(); return tk.S.ph })
 // 人のように本物のマウスで遊ぶ（状態を見て、押す穴の画面座標をクリック）
@@ -147,6 +158,10 @@ await t('結果画像（1080x1350）を保存できる', async () => {
   const path = `${ROOT}/shots/card.png`; await d.saveAs(path); const size = statSync(path).size
   const dim = await q.evaluate(async () => { const c = await tk.drawCard(); return [c.width, c.height] })
   expect(d.suggestedFilename() === 'takoyaki-spin.png' && size > 80000 && dim[0] === 1080 && dim[1] === 1350, { f: d.suggestedFilename(), size, dim }); return { size }
+})
+await t('Xでポスト: ボタンが見えて、押すと x.com/intent/post が開く（text に称号とハッシュタグ、url に公開URL）', async () => {
+  const r = await xPost(q), rank = await q.evaluate(() => document.querySelector('#rankN').textContent)
+  expect(r.b.vis && !r.b.clip && r.b.label === 'Xでポスト' && r.url.startsWith('https://x.com/intent/post?') && r.text.includes(rank) && r.text.includes('#たこ焼きくるくる') && /\d+舟/.test(r.text) && !r.text.includes('tom3games') && r.link === 'https://tom3games.github.io/takoyaki-spin/' && r.text === r.api.text && r.link === r.api.url, r); return r.text
 })
 await t('もう一回ですぐ遊べる', async () => { await q.click('#bAgain'); const r = await q.evaluate(() => ({ v: tk.S.view, ph: tk.S.ph, left: tk.S.left, boats: tk.S.st.boats, busy: tk.S.holes.filter(h => h.st !== 'empty').length })); expect(r.v === 'play' && r.ph === 'ready' && r.left === 60 && r.boats === 0 && r.busy === 0, r); return r })
 await t('通しでエラーなし', async () => { expect(q.errs.length === 0, q.errs.join('|')) })
@@ -255,6 +270,8 @@ await t('英語表示（タイトル・遊び方・プレイ・結果・画像�
   await e.evaluate(() => { tk.dbg.quiet(true); let k = 0; while (tk.S.view !== 'result' && k++ < 60 * 90) tk.dbg.step(1); tk.dbg.step(60 * 5) }); await e.waitForTimeout(600)
   const rt = await e.evaluate(() => document.querySelector('#vResult').innerText); await e.screenshot({ path: `${ROOT}/shots/en-result.png` })
   const card = await e.evaluate(async () => { const c = await tk.drawCard(); return c.width })
+  const x = await xPost(e), rank = await e.evaluate(() => document.querySelector('#rankN').textContent)
+  expect(x.b.vis && !x.b.clip && x.b.label === 'Post on X' && x.url.startsWith('https://x.com/intent/post?') && x.text.includes(rank) && x.text.includes('#TakoyakiSpin') && !jp.test(x.text) && x.link === 'https://tom3games.github.io/takoyaki-spin/', x)
   const bad = [tt, ht, pt, rt].filter(x => jp.test(x)).map(x => x.match(/.{0,8}[぀-ヿ一-鿿].{0,8}/)[0])
   expect(!bad.length && card === 1080 && e.errs.length === 0, bad.concat(e.errs)); return rt.slice(0, 50).replace(/\n/g, ' / ')
 })
@@ -276,6 +293,7 @@ for (const [w, h, name] of SIZES) {
   for (const [vn, r] of Object.entries(views)) await t(`一画面に収まる ${name} ${w}x${h} ${vn}`, async () => { expect(!r.over.length, r) })
   await t(`${name}: 8つの穴が画面内・押せる大きさ・案内に隠れない`, async () => { expect(h1.inside && h2.inside && h1.minR >= 22 && h1.underTut === 0, { h1, h2 }); return { r: h1.minR } })
   await t(`${name}: 写真が見える大きさ`, async () => { const ts = await v.evaluate(() => document.querySelector('#photo').getBoundingClientRect().width); expect(ts >= 120, ts); return Math.round(ts) })
+  await t(`${name}: 結果のボタン（Xでポスト含む）の文字が切れない`, async () => { const c = await clipped(v), x = await v.evaluate(() => !!document.querySelector('#bX').offsetParent); expect(!c.length && x, c) })
   await t(`${name}: はみ出し・エラーなし`, async () => { const o = await overflow(v); expect(o.sw <= o.W && !o.bad.length && !v.errs.length, JSON.stringify(o) + v.errs.join('|')) })
   await v.close()
 }

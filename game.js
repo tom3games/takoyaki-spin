@@ -767,6 +767,11 @@ async function drawCard() {
   x.textAlign = 'center'; x.fillStyle = '#a99ac0'; x.font = `900 26px 'Zen Maru Gothic',sans-serif`; x.fillText(X.cardFoot, 540, 1300)
   return c
 }
+// Xでポスト（クリックの中で同期的に開く。URL は url パラメータで渡す）
+const GAME_URL = 'https://tom3games.github.io/takoyaki-spin/'
+function xText() { const R = S.result; if (!R) return ''; return T('xText').replace('{t}', L(R.tierObj)).replace('{n}', R.boats).replace('{r}', Math.round(R.round * 100)) + ' ' + T('xTag') }
+function xIntent() { return 'https://x.com/intent/post?text=' + encodeURIComponent(xText()) + '&url=' + encodeURIComponent(GAME_URL) }
+function postX() { if (!S.result) return; window.open(xIntent(), '_blank', 'noopener') }
 function canShare() { try { return isTouch() && !!navigator.canShare && navigator.canShare({ files: [new File([new Blob(['x'])], 'a.png', { type: 'image/png' })] }) } catch (e) { return false } }
 async function saveImage() {
   const c = await drawCard(), blob = await new Promise(r => c.toBlob(r, 'image/png'))
@@ -803,6 +808,7 @@ function boot() {
   on('#bHowBack', () => { Snd.sfx('tap'); go('vTitle') })
   on('#bAgain', () => { Snd.sfx('tap'); startGame() })
   on('#bSave', () => saveImage())
+  on('#bX', () => { Snd.sfx('tap'); postX() })
   on('#bTitle', () => { Snd.sfx('tap'); go('vTitle') })
   on('#bLang', () => { S.lang = S.lang === 'ja' ? 'en' : 'ja'; try { localStorage.setItem('tk.lang', S.lang) } catch (e) {} applyLang() })
   on('#bMute', () => { Snd.setMute(!Snd.muted); $('#icOn').hidden = Snd.muted; $('#icOff').hidden = !Snd.muted; try { localStorage.setItem('tk.mute', Snd.muted ? '1' : '0') } catch (e) {} })
@@ -817,7 +823,7 @@ function boot() {
 
 // 検証用の窓口
 window.tk = {
-  S, BOTS, startGame, tapHole, holeAt, toScreen, holePos, computeResult, drawCard, drawPhoto, saveImage, Snd, custs, layout,
+  S, BOTS, startGame, tapHole, holeAt, toScreen, holePos, computeResult, drawCard, drawPhoto, saveImage, xText, xIntent, postX, GAME_URL, Snd, custs, layout,
   get fps() { return fps },
   dbg: {
     pause: v => { paused = v }, step: n => { for (let i = 0; i < n; i++) update() }, render, fps: () => fps,

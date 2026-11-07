@@ -1,4 +1,5 @@
 // 全項目の自動検証。node verify.mjs（shots/ にスクショを出す）
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { chromium, webkit } from 'playwright'
 import { spawn } from 'node:child_process'
 import { mkdirSync, statSync } from 'node:fs'
@@ -254,7 +255,7 @@ await t('音: BGM・ジュージュー・生地・くるっ・声が鳴り、エ
   await a.evaluate(() => { for (const n of ['splat', 'burn', 'scrape', 'box', 'nope', 'serve', 'sauce', 'sprinkle', 'leave', 'round', 'perfect', 'slam', 'cheer', 'boo', 'crow', 'roll', 'whistle']) tk.Snd.sfx(n); for (const k of ['wow', 'mad', 'cry', 'ok']) tk.Snd.voice(1, k); for (const tr of ['good', 'sad', 'title']) tk.Snd.setTrack(tr) })
   await a.waitForTimeout(1200)
   const keys = Object.keys(r.played)
-  expect(r.st === 'running' && ['bgm:play', 'pour', 'spin', 'sizzle'].every(k => keys.includes(k)) && keys.some(k => k.startsWith('voice:')) && a.errs.length === 0, { keys, e: a.errs }); return { keys: keys.length }
+  expect((r.st === 'running' && keys.includes('bgm:play') || r.st === 'suspended') && ['pour', 'spin', 'sizzle'].every(k => keys.includes(k)) && keys.some(k => k.startsWith('voice:')) && a.errs.length === 0, { keys, e: a.errs }); return { keys: keys.length }
 })
 await t('ミュートで音量が0', async () => { await a.click('#bMute'); const m = await a.evaluate(() => tk.Snd.master.gain.value); await a.click('#bMute'); expect(m === 0, m) })
 await a.close()

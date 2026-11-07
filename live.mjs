@@ -1,4 +1,5 @@
 // 公開URLの確認。node live.mjs（ログインしていないブラウザで見る）。SKIPGH=1 で GitHub ページの確認を省く
+import './mute-auto.mjs'  // テスト中は絶対に音を出さない（playwright を無音に差し替え）
 import { chromium, webkit } from 'playwright'
 const SLUG = 'takoyaki-spin', ORG = 'tom3games'
 const URL0 = `https://${ORG}.github.io/${SLUG}/`

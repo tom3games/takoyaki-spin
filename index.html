@@ -35,7 +35,7 @@ button{font-family:inherit;color:inherit;font-size:inherit}
 #world{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
 #fx{position:fixed;inset:0;z-index:15;pointer-events:none;overflow:hidden}
 
-.view{position:fixed;inset:0;z-index:10;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:max(58px,calc(env(safe-area-inset-top) + 52px)) 16px max(16px,calc(env(safe-area-inset-bottom) + 12px));gap:12px}
+.view{position:fixed;inset:0;z-index:10;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:max(58px,calc(env(safe-area-inset-top) + 52px)) 16px max(16px,calc(calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)) + 12px));gap:12px}
 .wrap{width:min(520px,100%);display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6vh,14px);min-height:0;max-height:100%}
 .view:not([hidden]) .wrap{animation:enter .35s cubic-bezier(.2,.8,.2,1) both}
 @keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -83,7 +83,7 @@ button{font-family:inherit;color:inherit;font-size:inherit}
 .tBottom{width:min(520px,100%);display:flex;flex-direction:column;gap:10px}
 @media (max-height:700px){.hostLine .bubble{font-size:13px;padding:8px 12px;line-height:1.45}.hostLine .face{width:46px;height:46px}.tagline{margin-top:10px}}
 @media (min-aspect-ratio:1/1) and (max-height:560px){
-  #vTitle{flex-direction:row;align-items:center;justify-content:space-between;gap:16px;padding:max(52px,calc(env(safe-area-inset-top) + 48px)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+  #vTitle{flex-direction:row;align-items:center;justify-content:space-between;gap:16px;padding:max(52px,calc(env(safe-area-inset-top) + 48px)) max(16px,env(safe-area-inset-right)) max(12px,calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px))) max(16px,env(safe-area-inset-left))}
   #vTitle .tTop{width:min(330px,40vw)}
   #vTitle .tBottom{width:min(400px,48vw)}
   .logo .b{font-size:min(6.4vw,13vh,54px)}
@@ -147,7 +147,7 @@ button{font-family:inherit;color:inherit;font-size:inherit}
 .banner{position:absolute;left:0;right:0;top:38%;text-align:center;pointer-events:none;z-index:6}
 .banner b{display:inline-block;font-family:var(--disp);font-weight:400;font-size:clamp(40px,12vw,76px);color:#fff;-webkit-text-stroke:2px var(--ink);text-shadow:0 6px 0 var(--red-dk),0 0 30px rgba(0,0,0,.5);animation:pop .35s cubic-bezier(.2,1.6,.4,1) both;padding:0 12px}
 @keyframes pop{from{transform:scale(2.2);opacity:0}to{transform:none;opacity:1}}
-.tut{position:absolute;left:50%;bottom:max(14px,calc(env(safe-area-inset-bottom) + 10px));transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:8px;background:rgba(18,14,34,.88);padding:8px 14px;border-radius:99px;font-weight:900;font-size:14px;white-space:nowrap;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(244,192,62,.6)}
+.tut{position:absolute;left:50%;bottom:max(14px,calc(calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)) + 10px));transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:8px;background:rgba(18,14,34,.88);padding:8px 14px;border-radius:99px;font-weight:900;font-size:14px;white-space:nowrap;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(244,192,62,.6)}
 .tut svg{width:28px;height:28px;flex:none;animation:tapIc .8s ease-in-out infinite alternate}
 @keyframes tapIc{from{transform:translateY(-3px)}to{transform:translateY(3px)}}
 .pop{position:fixed;z-index:16;font-family:var(--disp);font-size:22px;color:#fff;-webkit-text-stroke:1.5px var(--ink);text-shadow:0 3px 0 var(--ink);transform:translate(-50%,-50%);animation:popUp .9s ease-out forwards;pointer-events:none;white-space:nowrap}
@@ -193,11 +193,11 @@ button{font-family:inherit;color:inherit;font-size:inherit}
 .btn.xpost::before{opacity:.35}
 .btn.xpost:active{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.28),0 1px 0 #3c3c3c}
 .btn.xpost svg{fill:currentColor;stroke:none;width:20px;height:20px}
-.skip{position:absolute;left:0;right:0;bottom:max(10px,env(safe-area-inset-bottom));text-align:center;font-size:12px;font-weight:900;opacity:.75;pointer-events:none}
+.skip{position:absolute;left:0;right:0;bottom:max(10px,calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px)));text-align:center;font-size:12px;font-weight:900;opacity:.75;pointer-events:none}
 @media (max-height:700px){.btn{min-height:46px;font-size:16px}.btn.red{min-height:50px;font-size:18px}.btn.ghost{min-height:40px;font-size:14px}.rank{min-height:64px}.stamp{width:62px;height:62px}.rankTxt .n{font-size:24px}.rankTxt .t{font-size:12px}.st .v{font-size:20px}.st{padding:4px 2px}}
 .rSide{display:contents}
 @media (min-aspect-ratio:1/1) and (max-height:560px){
-  #vResult{padding:max(10px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+  #vResult{padding:max(10px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(10px,calc(env(safe-area-inset-bottom) + var(--inapp-bot,0px))) max(16px,env(safe-area-inset-left))}
   #vResult .wrap{width:100%;max-width:900px;display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,340px);grid-template-rows:auto minmax(0,1fr);gap:6px 18px;align-items:center}
   .rHead{grid-column:1;grid-row:1;justify-self:center}
   .photoBox{grid-column:1;grid-row:2;height:100%}
@@ -331,6 +331,6 @@ body.gloom #shade{opacity:1}
 <script src="data.js?v=2"></script>
 <script src="snd.js?v=2"></script>
 <script type="module" src="game.js?v=2"></script>
-<script src="support.js?v=4" data-ja="たこ焼き" data-en="takoyaki"></script>
+<script src="support.js?v=5" data-ja="たこ焼き" data-en="takoyaki"></script>
 </body>
 </html>
